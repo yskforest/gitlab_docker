@@ -1,20 +1,17 @@
-version: '3.6'
+version: '3'
 services:
-  gitlab:
-    image: gitlab/gitlab-ce
-    name: gitlab
+  web:
+    image: gitlab/gitlab-ce:16.9.0-ce.0
     restart: always
-    hostname: 'gitlab.example.com'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.example.com:8929'
-        gitlab_rails['gitlab_shell_ssh_port'] = 2424
+        external_url 'http://172.17.162.195:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        nginx['listen_port'] = 80
     ports:
-      - '8929:8929'
-      - '443:443'
-      - '2424:2424'
+      - '8929:80'
+      - '2224:22'
     volumes:
-      - '$GITLAB_HOME/config:/etc/gitlab'
-      - '$GITLAB_HOME/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/data:/var/opt/gitlab'
-    shm_size: '256m'
+      - './gitlab/config:/etc/gitlab'
+      - './gitlab/logs:/var/log/gitlab'
+      - './gitlab/data:/var/opt/gitlab'
