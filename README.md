@@ -28,18 +28,23 @@ services:
     image: gitlab/gitlab-ce:latest
     container_name: 'gitlab'
     restart: always
+    hostname: ${hostname}
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://localhost:8929'
-        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        external_url 'http://${hostname}:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
         nginx['listen_port'] = 80
+        # Container Registry
+        registry_external_url 'http://${hostname}:5050'
+        registry['enable'] = true
     ports:
       - '8929:80'
-      - '2224:22'
+      - '2222:22'
+      - '5050:5050'
     volumes:
-      - './gitlab/config:/etc/gitlab'
-      - './gitlab/logs:/var/log/gitlab'
-      - './gitlab/data:/var/opt/gitlab'
+      - ./volumes/config:/etc/gitlab
+      - ./volumes/logs:/var/log/gitlab
+      - ./volumes/data:/var/opt/gitlab
 ```
 
 ```bash
