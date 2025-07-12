@@ -48,7 +48,12 @@ docker compose exec gitlab cat /etc/gitlab/initial_root_password
 ```
 
 ## 信頼済み証明書に追加
-```
+```bash
 sudo cp gitlab.local.crt /usr/local/share/ca-certificates/gitlab.local.crt
 sudo update-ca-certificates
+
+# 証明書をDockerに信頼させる
+sudo mkdir -p /etc/docker/certs.d/gitlab.local:5050
+sudo cp ./volumes/ssl/gitlab.local.crt /etc/docker/certs.d/gitlab.local:5050/ca.crt
+sudo systemctl restart docker
 ```
