@@ -3,22 +3,23 @@ services:
     image: gitlab/gitlab-ce:latest
     container_name: 'gitlab'
     restart: always
-    hostname: 'gitlab.local'
+    hostname: ${hostname}
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.local'
+        external_url 'https://${hostname}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
         nginx['redirect_http_to_https'] = true
-        nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.local.crt"
-        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.local.key"
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/${hostname}.crt"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/${hostname}.key"
         # Container Registry
-        registry_external_url 'https://gitlab.local:5050'
+        registry_external_url 'https://${hostname}:5050'
         registry['enable'] = true
-        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.local.crt"
-        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.local.key"
+        registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/${hostname}.crt"
+        registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/${hostname}.key"
     ports:
       - '80:80'
       - '443:443'
-      - '22:22'
+      - '2222:22'
       - '5050:5050'
     volumes:
       - ./volumes/config:/etc/gitlab

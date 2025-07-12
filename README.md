@@ -6,6 +6,8 @@
 
 ## usage
 ```bash
+# gitlab.localはIPアドレスなど環境依存
+# IPアドレスの場合、/etc/hostsに追加しなくてよい
 echo "127.0.0.1 gitlab.local" | sudo tee -a /etc/hosts
 sudo mkdir -p volumes/ssl
 cd volumes/ssl
