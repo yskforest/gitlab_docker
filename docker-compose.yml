@@ -1,17 +1,21 @@
-version: '3'
 services:
-  web:
-    image: gitlab/gitlab-ce:16.9.0-ce.0
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: 'gitlab'
     restart: always
+    hostname: 'gitlab.local'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://172.17.162.195:8929'
-        gitlab_rails['gitlab_shell_ssh_port'] = 2224
-        nginx['listen_port'] = 80
+        external_url 'https://gitlab.local'
+        nginx['redirect_http_to_https'] = true
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.local.crt"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.local.key"
     ports:
-      - '8929:80'
-      - '2224:22'
+      - '80:80'
+      - '443:443'
+      - '22:22'
     volumes:
-      - './gitlab/config:/etc/gitlab'
-      - './gitlab/logs:/var/log/gitlab'
-      - './gitlab/data:/var/opt/gitlab'
+      - ./volumes/config:/etc/gitlab
+      - ./volumes/logs:/var/log/gitlab
+      - ./volumes/data:/var/opt/gitlab
+      - ./volumes/ssl:/etc/gitlab/ssl:ro
