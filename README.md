@@ -63,4 +63,21 @@ sudo update-ca-certificates
 sudo mkdir -p /etc/docker/certs.d/gitlab.local:5050
 sudo cp ./volumes/ssl/gitlab.local.crt /etc/docker/certs.d/gitlab.local:5050/ca.crt
 sudo systemctl restart docker
+
+# 証明書を変更した場合は実行する
+docker exec -it gitlab gitlab-ctl reconfigure
 ```
+## jenkins連携
+### GitLab設定
+- Webhook許可先の登録
+  - ローカルネットワーク内でWebhookを投げたい時は、許可設定を入れる必要がある
+  - Admin Area -> Settings -> Network -> Outbound requests
+  - Allow requests to the local network from web hooks and servicesにチェックを入れるか、allow listに入れる
+- Webwooks
+  - プロジェクト
+  - http://{jenkins}/gitlab-webhook/
+- Access Tokensの発行
+  - read_repository, api, write_repository
+
+## memo
+- [GitLabにPushしたソースコードをJenkinsで自動テストしてみる！](https://zenn.dev/alfredtiei/articles/45bac2eed5713c)

@@ -6,19 +6,20 @@ services:
     hostname: ${hostname}
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://${hostname}:8929'
+        # external_url 'https://${hostname}:8929'
+        external_url 'https://${hostname}'
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
         nginx['listen_port'] = 8929
         nginx['listen_https'] = true
         nginx['redirect_http_to_https'] = true
         nginx['ssl_certificate'] = "/etc/gitlab/ssl/${hostname}.crt"
         nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/${hostname}.key"
-        # Container Registry
         registry_external_url 'https://${hostname}:5050'
         registry['enable'] = true
         registry_nginx['ssl_certificate'] = "/etc/gitlab/ssl/${hostname}.crt"
         registry_nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/${hostname}.key"
     ports:
+      - '80:80'
       - '8929:8929'
       - '2222:22'
       - '5050:5050'
